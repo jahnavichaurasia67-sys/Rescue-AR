@@ -1,3 +1,8 @@
+let hospitalLat = null;
+let hospitalLon = null;
+let userLat = null;
+let userLon = null;
+
 const video = document.getElementById("camera");
 
 navigator.mediaDevices
@@ -16,8 +21,8 @@ navigator.mediaDevices
 navigator.geolocation.getCurrentPosition(
   async (pos) => {
 
-    const lat = pos.coords.latitude;
-    const lon = pos.coords.longitude;
+    userLat = pos.coords.latitude;
+    userLon = pos.coords.longitude;
 
     document.getElementById("location").innerHTML =
       "Finding nearby emergency services...";
@@ -27,9 +32,7 @@ navigator.geolocation.getCurrentPosition(
       const query = `
       [out:json];
       (
-        node["amenity"="hospital"](around:15000,${lat},${lon});
-        node["amenity"="police"](around:15000,${lat},${lon});
-        node["amenity"="fire_station"](around:15000,${lat},${lon});
+        node["amenity"="hospital"](around:15000,${userLat},${userLon});
       );
       out;
       `;
@@ -45,77 +48,44 @@ navigator.geolocation.getCurrentPosition(
       const data = await response.json();
 
       let nearestHospital = null;
-      let nearestPolice = null;
-      let nearestFire = null;
-
       let hospitalDist = Infinity;
-      let policeDist = Infinity;
-      let fireDist = Infinity;
 
       data.elements.forEach(place => {
 
         const distance = getDistance(
-          lat,
-          lon,
+          userLat,
+          userLon,
           place.lat,
           place.lon
         );
 
-        if (place.tags.amenity === "hospital") {
-          if (distance < hospitalDist) {
-            hospitalDist = distance;
-            nearestHospital = place;
-          }
-        }
-
-        if (place.tags.amenity === "police") {
-          if (distance < policeDist) {
-            policeDist = distance;
-            nearestPolice = place;
-          }
-        }
-
-        if (place.tags.amenity === "fire_station") {
-          if (distance < fireDist) {
-            fireDist = distance;
-            nearestFire = place;
-          }
+        if (distance < hospitalDist) {
+          hospitalDist = distance;
+          nearestHospital = place;
         }
 
       });
 
       let html = `
-      <b>🚨 RescueAR Emergency Services</b><br><br>
+      <b>🚨 RescueAR Emergency Navigation</b><br><br>
+
       📍 Your Location<br>
-      Lat: ${lat.toFixed(5)}<br>
-      Lon: ${lon.toFixed(5)}
+      Lat: ${userLat.toFixed(5)}<br>
+      Lon: ${userLon.toFixed(5)}
       <br><br>
       `;
 
       if (nearestHospital) {
+
+        hospitalLat = nearestHospital.lat;
+        hospitalLon = nearestHospital.lon;
+
         html += `
         🏥 <b>Nearest Hospital</b><br>
         ${nearestHospital.tags.name || "Unknown Hospital"}<br>
         Distance: ${hospitalDist.toFixed(2)} km
         <br><br>
-        `;
-      }
-
-      if (nearestPolice) {
-        html += `
-        🚓 <b>Nearest Police Station</b><br>
-        ${nearestPolice.tags.name || "Unknown Police Station"}<br>
-        Distance: ${policeDist.toFixed(2)} km
-        <br><br>
-        `;
-      }
-
-      if (nearestFire) {
-        html += `
-        🚒 <b>Nearest Fire Station</b><br>
-        ${nearestFire.tags.name || "Unknown Fire Station"}<br>
-        Distance: ${fireDist.toFixed(2)} km
-        <br><br>
+        🧭 Rotate your phone to align the arrow.
         `;
       }
 
@@ -126,7 +96,7 @@ navigator.geolocation.getCurrentPosition(
       console.error(error);
 
       document.getElementById("location").innerHTML =
-        "Failed to fetch emergency service data.";
+        "Failed to fetch hospital data.";
     }
 
   },
@@ -167,3 +137,63 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
   return R * c;
 }
+
+function getBearing(lat1, lon1, lat2, lon2) {
+
+  const dLon =
+    (lon2 - lon1) * Math.PI / 180;
+
+  const y =
+    Math.sin(dLon) *
+    Math.cos(lat2 * Math.PI / 180);
+
+  const x =
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.sin(lat2 * Math.PI / 180) -
+
+    Math.sin(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.cos(dLon);
+
+  let bearing =
+    Math.atan2(y, x) *
+    180 / Math.PI;
+
+  return (bearing + 360) % 360;
+}
+
+window.addEventListener(
+  "deviceorientation",
+  (event) => {
+
+    if (
+      hospitalLat === null ||
+      hospitalLon === null
+    ) {
+      return;
+    }
+
+    const heading =
+      event.alpha || 0;
+
+    const targetBearing =
+      getBearing(
+        userLat,
+        userLon,
+        hospitalLat,
+        hospitalLon
+      );
+
+    const rotation =
+      targetBearing - heading;
+
+    const arrow =
+      document.getElementById("direction");
+
+    if (arrow) {
+      arrow.style.transform =
+        `rotate(${rotation}deg)`;
+    }
+
+  }
+);
