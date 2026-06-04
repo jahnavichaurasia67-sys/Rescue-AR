@@ -15,5 +15,9 @@ body {
   padding: 12px;
   border-radius: 10px;
   font-size: 14px;
-  width: 220px;
+  width: 240px;
+}
+
+#arrow {
+  filter: drop-shadow(0 0 10px cyan);
 }

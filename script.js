@@ -1,29 +1,40 @@
-let userLat, userLon;
+let userLat = null;
+let userLon = null;
+
 let heading = 0;
-
-const locationText = document.getElementById("location");
-const hospitalText = document.getElementById("hospital");
-const distanceText = document.getElementById("distance");
-const directionText = document.getElementById("direction");
-const headingText = document.getElementById("heading");
+let smoothHeading = 0;
 
 // -----------------------------
-// CAMERA + GPS
+// GPS START
 // -----------------------------
-navigator.geolocation.watchPosition(async (pos) => {
+function startGPS() {
 
-  userLat = pos.coords.latitude;
-  userLon = pos.coords.longitude;
+  navigator.geolocation.watchPosition(
+    (pos) => {
 
-  locationText.innerText =
-    `📍 ${userLat.toFixed(4)}, ${userLon.toFixed(4)}`;
+      userLat = pos.coords.latitude;
+      userLon = pos.coords.longitude;
 
-  await findHospital();
+      document.getElementById("location").innerText =
+        `📍 ${userLat.toFixed(5)}, ${userLon.toFixed(5)}`;
 
-});
+      findHospital();
+
+    },
+    (err) => {
+      alert("GPS Error: Enable location + use HTTPS/Live Server");
+      console.log(err);
+    },
+    {
+      enableHighAccuracy: true
+    }
+  );
+}
+
+startGPS();
 
 // -----------------------------
-// NEAREST HOSPITAL (OSM)
+// FIND NEAREST HOSPITAL
 // -----------------------------
 async function findHospital() {
 
@@ -38,28 +49,30 @@ async function findHospital() {
   `;
 
   try {
+
     const res = await fetch(url);
     const data = await res.json();
 
     if (!data.elements.length) {
-      hospitalText.innerText = "🏥 No hospital found";
+      document.getElementById("hospital").innerText =
+        "🏥 No hospital found";
       return;
     }
 
     const h = data.elements[0];
 
-    hospitalText.innerText =
+    document.getElementById("hospital").innerText =
       "🏥 " + (h.tags.name || "Hospital");
 
     const dist = getDistance(userLat, userLon, h.lat, h.lon);
 
-    distanceText.innerText =
+    document.getElementById("distance").innerText =
       "📏 " + dist.toFixed(2) + " km";
 
     updateDirection(h.lat, h.lon);
 
   } catch (e) {
-    hospitalText.innerText = "Error loading hospital";
+    console.log(e);
   }
 }
 
@@ -69,65 +82,69 @@ async function findHospital() {
 function getDistance(lat1, lon1, lat2, lon2) {
 
   const R = 6371;
+
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
 
   const a =
-    Math.sin(dLat/2) ** 2 +
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
     Math.cos(lat1*Math.PI/180) *
     Math.cos(lat2*Math.PI/180) *
-    Math.sin(dLon/2) ** 2;
+    Math.sin(dLon/2) * Math.sin(dLon/2);
 
-  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+  return R * c;
 }
 
 // -----------------------------
-// COMPASS
+// SMOOTH COMPASS
 // -----------------------------
 window.addEventListener("deviceorientation", (e) => {
 
   if (e.alpha !== null) {
-    heading = 360 - e.alpha;
-    heading = Math.round(heading);
 
-    headingText.innerText = `🧭 Heading: ${heading}°`;
+    heading = 360 - e.alpha;
+
+    // smoothing (VERY IMPORTANT)
+    smoothHeading += (heading - smoothHeading) * 0.1;
+
+    document.getElementById("heading").innerText =
+      "🧭 Heading: " + smoothHeading.toFixed(0) + "°";
   }
 });
 
 // -----------------------------
-// DIRECTION CALCULATION
+// AR DIRECTION + AR ARROW ROTATION
 // -----------------------------
-function updateDirection(lat2, lon2) {
+function updateDirection(hLat, hLon) {
 
-  let dx = lon2 - userLon;
-  let dy = lat2 - userLat;
+  if (!userLat || !userLon) return;
 
-  let angle = Math.atan2(dy, dx) * 180 / Math.PI;
+  let dx = hLon - userLon;
+  let dy = hLat - userLat;
 
-  if (angle < 0) angle += 360;
+  let targetAngle = Math.atan2(dy, dx) * 180 / Math.PI;
 
-  let relative = angle - heading;
+  if (targetAngle < 0) targetAngle += 360;
 
-  if (relative < 0) relative += 360;
+  let relativeAngle = targetAngle - smoothHeading;
 
+  if (relativeAngle < 0) relativeAngle += 360;
+
+  // 🔥 ROTATE AR ARROW
+  const arrow = document.getElementById("arrow");
+
+  arrow.setAttribute("rotation", "0 " + relativeAngle + " 0");
+
+  // UI direction text
   let dir = "";
 
-  if (relative < 45 || relative > 315) dir = "➡ East";
-  else if (relative < 135) dir = "⬆ North";
-  else if (relative < 225) dir = "⬅ West";
-  else dir = "⬇ South";
+  if (relativeAngle < 45 || relativeAngle > 315) dir = "➡ Forward";
+  else if (relativeAngle < 135) dir = "⬆ Left";
+  else if (relativeAngle < 225) dir = "⬅ Back";
+  else dir = "⬇ Right";
 
-  directionText.innerText = "🧭 " + dir;
-
-  // -----------------------------
-  // MOVE AR OBJECT BASED ON DIRECTION
-  // -----------------------------
-  const marker = document.getElementById("arMarker");
-
-  let z = -3;
-
-  if (dir.includes("North")) marker.setAttribute("position", "0 1 " + z);
-  if (dir.includes("South")) marker.setAttribute("position", "0 -1 " + z);
-  if (dir.includes("East")) marker.setAttribute("position", "1 0 " + z);
-  if (dir.includes("West")) marker.setAttribute("position", "-1 0 " + z);
+  document.getElementById("direction").innerText =
+    "🧭 " + dir;
 }
