@@ -13,8 +13,7 @@
 
 # 📱 Live Demo
 
-**Access from anywhere:**
-https://jahnavichaurasia67-sys.github.io/Rescue-AR/
+**Access from anywhere:** https://jahnavichaurasia67-sys.github.io/Rescue-AR/
 
 ⚠️ Works best on **Google Chrome** with Camera and Location permissions enabled.
 
@@ -203,7 +202,7 @@ Rescue-AR/
 ## For Users
 
 1. Open Chrome Browser
-2. Visit the live demo
+2. Visit the live demo : https://jahnavichaurasia67-sys.github.io/Rescue-AR/
 3. Click "Start Emergency Mode"
 4. Allow Camera Permission
 5. Allow Location Permission
@@ -242,7 +241,7 @@ http://localhost:8000
 
 | Service            | Number |
 | ------------------ | ------ |
-| Police             | 100    |
+| Police             | 112    |
 | Ambulance          | 102    |
 | Fire Brigade       | 101    |
 | Women Helpline     | 1090   |
@@ -259,19 +258,6 @@ PHASE 1
 ✅ Emergency Mapping
 ✅ GitHub Deployment
 
-PHASE 2
-🔲 Twilio SMS Integration
-🔲 Live Dashboard
-🔲 WebSocket Updates
-🔲 Voice Navigation
-
-PHASE 3
-🔲 Government Integration
-🔲 Regulatory Compliance
-🔲 Security Enhancements
-🔲 Data Privacy Framework
-```
-
 ---
 
 # 👥 Team
@@ -284,14 +270,6 @@ PHASE 3
 ### HackHer Duo ❤️
 
 Built for emergency response and disaster safety.
-
----
-
-# 🏆 Hackathon
-
-**CYPHERSNOVA INNOVATOR'S HACKATHON 2026**
-
-Project Submission: **Rescue AR - AI-Powered Emergency Navigation System**
 
 ---
 
