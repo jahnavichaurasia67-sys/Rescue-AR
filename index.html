@@ -2,51 +2,98 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Rescue AR - Emergency Navigation</title>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Rescue AR - Emergency Navigation System</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
     <div id="app">
         <!-- Splash Screen -->
         <div id="splash" class="splash active">
-            <h1>🚨 Rescue AR</h1>
-            <p>Navigate Emergencies Smarter</p>
-            <button id="startBtn" class="btn-primary">Start Emergency Mode</button>
-        </div>
-
-        <!-- Camera/AR View -->
-        <div id="arView" class="ar-view hidden">
-            <video id="cameraFeed" autoplay playsinline></video>
-            <canvas id="arCanvas"></canvas>
-            <div id="arOverlay" class="ar-overlay">
-                <div id="hazardIndicator" class="hazard hidden">⚠️ Hazard Ahead</div>
-                <div id="directionArrow" class="direction-arrow">↑</div>
-                <div id="distanceInfo" class="distance-info"></div>
+            <div class="splash-content">
+                <div class="logo">🚨</div>
+                <h1>Rescue AR</h1>
+                <p class="tagline">Navigate Emergencies Smarter</p>
+                <p class="sub">Real-time AR evacuation • Hazard detection • SOS</p>
+                <button id="startBtn" class="btn-primary">🎯 Start Emergency Mode</button>
+                <p class="disclaimer">Camera & Location access required</p>
             </div>
         </div>
 
-        <!-- Map View -->
-        <div id="mapView" class="map-view hidden">
-            <div id="map"></div>
-            <div id="mapOverlay">
-                <button id="toggleAR" class="float-btn">📷 AR Mode</button>
-                <button id="sosBtn" class="sos-btn">🆘 SOS</button>
+        <!-- Main Container -->
+        <div id="mainContainer" class="hidden">
+            <!-- AR View -->
+            <div id="arView" class="ar-view hidden">
+                <video id="cameraFeed" autoplay playsinline muted></video>
+                <canvas id="arCanvas"></canvas>
+                <div id="arOverlay" class="ar-overlay">
+                    <div id="hazardIndicator" class="hazard hidden">
+                        <span class="hazard-icon">⚠️</span>
+                        <span id="hazardText">Hazard Ahead</span>
+                    </div>
+                    <div class="direction-container">
+                        <div id="directionArrow" class="direction-arrow">⬆️</div>
+                        <div id="distanceInfo" class="distance-info"></div>
+                    </div>
+                    <div id="confidenceBar" class="confidence-bar hidden">
+                        <div class="confidence-fill"></div>
+                    </div>
+                </div>
+                <div class="ar-controls">
+                    <button id="exitAR" class="control-btn">🗺️ Map View</button>
+                    <button id="arSOSBtn" class="sos-small">🆘 SOS</button>
+                </div>
+            </div>
+
+            <!-- Map View -->
+            <div id="mapView" class="map-view">
+                <div id="map"></div>
+                <div class="map-controls">
+                    <button id="toggleARBtn" class="float-btn">📷 AR Mode</button>
+                    <button id="mapSOSBtn" class="sos-btn">🆘 SOS</button>
+                </div>
+                <div id="statusBar" class="status-bar">
+                    <span id="gpsStatus">📍 Locating...</span>
+                    <span id="emergencyCount">🚑 Loading services...</span>
+                </div>
             </div>
         </div>
 
         <!-- SOS Panel -->
         <div id="sosPanel" class="sos-panel hidden">
-            <h2>🚨 EMERGENCY SOS</h2>
-            <p id="locationStatus">Getting your location...</p>
-            <button id="sendSOS">Send Emergency Alert</button>
-            <button id="closeSOS">Close</button>
+            <div class="sos-header">
+                <span class="sos-icon">🆘</span>
+                <h2>EMERGENCY SOS</h2>
+                <button id="closeSOS" class="close-sos">✕</button>
+            </div>
+            <div class="sos-body">
+                <p id="locationStatus" class="location-status">Getting your location...</p>
+                <div id="accuracyMeter" class="accuracy-meter">
+                    <div class="accuracy-fill"></div>
+                </div>
+                <div class="emergency-contacts">
+                    <button id="callEmergency" class="emergency-btn call">📞 911/112</button>
+                    <button id="sendSOS" class="emergency-btn send">📨 Send Alert</button>
+                    <button id="shareLocation" class="emergency-btn share">📍 Share Location</button>
+                </div>
+                <p class="sos-note">⚠️ Only use in real emergencies</p>
+            </div>
+        </div>
+
+        <!-- Loading Toast -->
+        <div id="toast" class="toast hidden">
+            <span id="toastMessage"></span>
         </div>
     </div>
+
+    <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/@tensorflow-models/coco-ssd"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2/dist/coco-ssd.min.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
