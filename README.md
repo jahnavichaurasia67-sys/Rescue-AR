@@ -260,42 +260,32 @@ PHASE 1
 
 ---
 
-# 👥 Team
-
-| Role        | Name              | Institution       |
-| ----------- | ----------------- | ----------------- |
-| Team Lead   | Jahnavi Chaurasia | FGIET, Rae Bareli |
-| Team Member | Sakina Kazmi      | FGIET, Rae Bareli |
-
-### HackHer Duo ❤️
+👥 Team
+Role	Name	Institution
+Team Lead	Jahnavi Chaurasia	FGIET, Rae Bareli
+Team Member	Sakina Kazmi	FGIET, Rae Bareli
+HackHer Duo ❤️
 
 Built for emergency response and disaster safety.
 
----
 
-# 🙏 Acknowledgments
 
-* OpenStreetMap
-* Overpass API
-* TensorFlow.js Team
-* Three.js Community
-* Leaflet.js
-* GitHub Pages
+🙏 Acknowledgments
+OpenStreetMap
+Overpass API
+TensorFlow.js Team
+Three.js Community
+Leaflet.js
+GitHub Pages
+⚠️ Disclaimer
 
----
+Rescue AR is a prototype demonstration project.
 
-# ⚠️ Disclaimer
-
-**Rescue AR is a prototype demonstration project.**
-
-* SOS opens the SMS application and does not automatically contact emergency services.
-* In actual emergencies, dial **112** immediately.
-* GPS accuracy varies across devices.
-* Test only in safe environments.
-
----
-
-# 📄 License
+SOS opens the SMS application and does not automatically contact emergency services.
+In actual emergencies, dial 112 immediately.
+GPS accuracy varies across devices.
+Test only in safe environments.
+📄 License
 
 ✅ Educational Use Allowed
 
@@ -305,44 +295,33 @@ Built for emergency response and disaster safety.
 
 ❌ Commercial Use Requires Permission
 
----
-
-# 🤝 Contributing
+🤝 Contributing
 
 Contributions are welcome in:
 
-* Backend API Integration
-* Offline Mode
-* Voice Assistance
-* Multi-Language Support
-* Emergency Analytics
-
----
-
-# 📞 Contact
-
-### Live Demo
+Backend API Integration
+Offline Mode
+Voice Assistance
+Multi-Language Support
+Emergency Analytics
+📞 Contact
+Live Demo
 
 https://jahnavichaurasia67-sys.github.io/Rescue-AR/
 
-### GitHub Repository
+GitHub Repository
 
 https://github.com/jahnavichaurasia67-sys/Rescue-AR
 
----
-
-# ⭐ Support
+⭐ Support
 
 If you find this project useful, please consider starring the repository.
 
-> "Because survival should never depend on guesswork."
+"Because survival should never depend on guesswork."
 
----
+🚨 Rescue AR
+Navigate Emergencies Smarter
 
-# 🚨 Rescue AR
-
-### Navigate Emergencies Smarter
-
-Made with ❤️ by **HackHer Duo**
+Made with ❤️ by HackHer Duo
 
 © 2026 Rescue AR Project
