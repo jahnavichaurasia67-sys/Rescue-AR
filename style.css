@@ -1,23 +1,170 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-  font-family: Arial;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow: hidden;
+    background: #000;
 }
 
-.ui {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 10;
+/* Splash Screen */
+.splash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    z-index: 1000;
 }
 
-#panel {
-  background: rgba(0,0,0,0.6);
-  color: white;
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 14px;
-  width: 240px;
+.splash h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: pulse 2s infinite;
 }
 
-#arrow {
-  filter: drop-shadow(0 0 10px cyan);
+.btn-primary {
+    margin-top: 2rem;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.btn-primary:active {
+    transform: scale(0.95);
+}
+
+/* AR View */
+.ar-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#cameraFeed {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#arCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.ar-overlay {
+    position: absolute;
+    bottom: 20%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+}
+
+.direction-arrow {
+    font-size: 5rem;
+    color: #2ecc71;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+    animation: bounce 1s infinite;
+}
+
+.hazard {
+    background: rgba(231, 76, 60, 0.9);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Map View */
+.map-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+.float-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.sos-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    padding: 15px 25px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1000;
+    animation: pulse 1s infinite;
+}
+
+/* SOS Panel */
+.sos-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 350px;
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    z-index: 2000;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
