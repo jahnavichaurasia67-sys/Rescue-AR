@@ -168,15 +168,16 @@
         }
 
         .map-controls {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 20px;
-            z-index: 500;
-        }
+    position: fixed;
+    bottom: max(20px, env(safe-area-inset-bottom));
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 99999 !important;
+    pointer-events: auto;
+}
 
         .ar-btn, .map-sos {
             padding: 12px 24px;
@@ -186,16 +187,26 @@
             cursor: pointer;
         }
 
-        .ar-btn {
-            background: #3498db;
-            color: white;
-        }
+        .ar-btn,
+.map-sos {
+    padding: 14px 24px;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+    z-index: 99999 !important;
+    display: block !important;
+    visibility: visible !important;
+}
 
-        .map-sos {
-            background: #e74c3c;
-            color: white;
-        }
+.ar-btn {
+    background: #3498db;
+}
 
+.map-sos {
+    background: #e74c3c;
+}
         .status-bar {
             position: absolute;
             top: 20px;
